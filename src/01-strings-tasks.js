@@ -207,25 +207,15 @@ function extractEmails(str) {
  */
 function getRectangleString(width, height) {
   let rectangle = '';
-  for (let i = 0; i < height; i += 1) {
-    for (let j = 0; j < width; j += 1) {
-      if (i === 0 && j === 0) {
-        rectangle += '┌';
-      } else if (i === 0 && j === width - 1) {
-        rectangle += '┐\n';
-      } else if (i === height - 1 && j === 0) {
-        rectangle += '└';
-      } else if (i === height - 1 && j === width - 1) {
-        rectangle += '┘\n';
-      } else if (i === 0 || i === height - 1) {
-        rectangle += '─';
-      } else if (j === 0 || j === width - 1) {
-        rectangle += '│';
-      } else {
-        rectangle += ' ';
-      }
-    }
+  const horizontal = '-'.repeat(width - 2);
+  const vertical = ' '.repeat(width - 2);
+  const topRow = `+${horizontal}+\n`;
+  const middleRow = `|${vertical}|\n`;
+  rectangle += topRow;
+  for (let i = 0; i < height - 2; i += 1) {
+    rectangle += middleRow;
   }
+  rectangle += topRow;
   return rectangle;
 }
 
@@ -247,18 +237,20 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-  let encoded = '';
+  let result = '';
   for (let i = 0; i < str.length; i += 1) {
-    const charCode = str.charCodeAt(i);
-    if (charCode < 65 || (charCode > 90 && charCode < 97) || charCode > 122) {
-      encoded += str[i];
-    } else if (charCode < 78) {
-      encoded += String.fromCharCode(charCode + 13);
-    } else {
-      encoded += String.fromCharCode(charCode - 13);
+    let char = str[i];
+    if (char.match(/[a-z]/i)) {
+      const code = str.charCodeAt(i);
+      if ((code >= 65) && (code <= 90)) {
+        char = String.fromCharCode(((code - 65 + 13) % 26) + 65);
+      } else if ((code >= 97) && (code <= 122)) {
+        char = String.fromCharCode(((code - 97 + 13) % 26) + 97);
+      }
     }
+    result += char;
   }
-  return encoded;
+  return result;
 }
 
 /**
@@ -304,12 +296,7 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  const cards = [
-    'A♣️', '2♣️', '3♣️', '4♣️', '5♣️', '6♣️', '7♣️', '8♣️', '9♣️', '10♣️', 'J♣️', 'Q♣️', 'K♣️',
-    'A♦️', '2♦️', '3♦️', '4♦️', '5♦️', '6♦️', '7♦️', '8♦️', '9♦️', '10♦️', 'J♦️', 'Q♦️', 'K♦️',
-    'A♥️', '2♥️', '3♥️', '4♥️', '5♥️', '6♥️', '7♥️', '8♥️', '9♥️', '10♥️', 'J♥️', 'Q♥️', 'K♥️',
-    'A♠️', '2♠️', '3♠️', '4♠️', '5♠️', '6♠️', '7♠️', '8♠️', '9♠️', '10♠️', 'J♠️', 'Q♠️', 'K♠️'];
-  return cards.indexOf(value);
+  return value.length;
 }
 
 
