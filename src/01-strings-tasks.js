@@ -206,17 +206,18 @@ function extractEmails(str) {
  *
  */
 function getRectangleString(width, height) {
-  let rectangle = '';
-  const horizontal = '-'.repeat(width - 2);
-  const vertical = ' '.repeat(width - 2);
-  const topRow = `+${horizontal}+\n`;
-  const middleRow = `|${vertical}|\n`;
-  rectangle += topRow;
-  for (let i = 0; i < height - 2; i += 1) {
-    rectangle += middleRow;
-  }
-  rectangle += topRow;
-  return rectangle;
+  const vertical = '│';
+  const horizontal = '─';
+  const space = ' ';
+  if (width === 0 && height === 0) { return '\n'; }
+  if (width === 0 && height === 1) { return '\n'; }
+  if (width === 1 && height === 0) { return '\n'; }
+  if (width === 1 && height === 1) { return '┌\n'; }
+  if (width === 1 && height === 2) { return '┌\n└\n'; }
+  if (width === 2 && height === 1) { return '┌┐\n'; }
+  if (width === 2 && height === 2) { return '┌┐\n└┘\n'; }
+
+  return `┌${horizontal.repeat(width - 2)}┐\n${(`${vertical}${space.repeat(width - 2)}${vertical}\n`).repeat(height - 2)}└${horizontal.repeat(width - 2)}┘\n`;
 }
 
 
@@ -296,7 +297,11 @@ function isString(value) {
  *   'K♠' => 51
  */
 function getCardId(value) {
-  return value.length;
+  const check = ['A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣',
+    'A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦',
+    'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥',
+    'A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠'];
+  return check.indexOf(value);
 }
 
 
