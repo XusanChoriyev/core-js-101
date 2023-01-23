@@ -658,8 +658,14 @@ function getElementByIndexes(arr, indexes) {
  *
  */
 function swapHeadAndTail(arr) {
-  const middle = Math.floor(arr.length / 2);
-  return arr.slice(middle).concat(arr.slice(0, middle));
+  const firstChunk = arr.slice(0, Math.floor(arr.length / 2));
+  const lastChunk = arr.slice(Math.ceil(arr.length / 2));
+  const center = arr[Math.floor(arr.length / 2)];
+  if (arr.length % 2 === 0) {
+    return [...lastChunk, ...firstChunk];
+  }
+
+  return [...lastChunk, center, ...firstChunk];
 }
 
 
